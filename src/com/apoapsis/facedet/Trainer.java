@@ -18,7 +18,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class Trainer {
 	
-	private String[] emotions = { "happy", "surprise", "neutral" };
+	private String[] emotions = { "happy", "surprise" };
 	private BasicFaceRecognizer fishFace;
 	
 	public Trainer() {

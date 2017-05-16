@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 
 import com.apoapsis.core.EnginePlayer;
 import com.apoapsis.core.Game;
-import com.apoapsis.core.Utilities;
 import com.apoapsis.facedet.DetectFaces;
 
 public class StartScreen {
@@ -21,11 +20,11 @@ public class StartScreen {
 	private BufferedImage face;
 	private BufferedImage rainbow;
 	private int countFPS = 0;
-	private boolean voice1 = true, voice2 = true, voice3 = true;
+	private boolean voice1 = true, voice2 = true, voice3 = true, bg = true;
 	private EnginePlayer enginePlayer;
 
 	public StartScreen() {
-		enginePlayer = new EnginePlayer();
+		enginePlayer = EnginePlayer.getInstance();
 		
 		try {
 			loadImages();
@@ -40,6 +39,13 @@ public class StartScreen {
 		enginePlayer.loadSound("welcome", "hosgeldin2.wav");
 		enginePlayer.loadSound("lights", "isik.wav");
 		enginePlayer.loadSound("camera", "kamera.wav");
+		enginePlayer.loadSound("school", "scene1-1.wav");
+		enginePlayer.loadSound("goodbye", "scene1-2.wav");
+		enginePlayer.loadSound("smile", "scene1-3.wav");
+		enginePlayer.loadSound("claps", "claps.wav");
+		enginePlayer.loadSound("bg", "background.wav");
+		
+		enginePlayer.changeVolume(-10.0f, "bg");
 	}
 
 	private void loadImages() throws IOException {
@@ -70,6 +76,10 @@ public class StartScreen {
 		if (animateValue > Double.MAX_VALUE - 1) {
 			animateValue = 0.0;
 		}
+		
+		if (bg) {
+			bg = !enginePlayer.playConcurrently("bg");
+		}
 
 		if (voice1) {
 			voice1 = !enginePlayer.playSound("welcome");
@@ -82,18 +92,6 @@ public class StartScreen {
 		if (voice3) {
 			voice3 = !enginePlayer.playSound("camera");
 		}
-		
-//		if (voice1) {
-//			voice1 = !Utilities.playSound("resources/voices/hosgeldin2.wav");
-//		}
-//
-//		if (voice2) {
-//			voice2 = !Utilities.playSound("resources/voices/isik.wav");
-//		}
-//
-//		if (voice3) {
-//			voice3 = !Utilities.playSound("resources/voices/kamera.wav");
-//		}
 
 		if (countFPS > 300) {
 			if (detectFaces.detectFaces() != null) {
