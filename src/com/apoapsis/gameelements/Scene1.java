@@ -43,7 +43,7 @@ public class Scene1 implements GameObject {
 
 				System.out.println(face);
 
-				if (face.equalsIgnoreCase("happy")) {
+				if (face != null && face.equalsIgnoreCase("happy")) {
 					success = true;
 					getFace = false;
 				}

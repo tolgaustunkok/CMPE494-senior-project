@@ -18,7 +18,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class Trainer {
 	
-	private String[] emotions = { "happy", "surprise" };
+	private String[] emotions = { "happy", "surprise", "neutral" };
 	private BasicFaceRecognizer fishFace;
 	
 	public Trainer() {
@@ -39,7 +39,7 @@ public class Trainer {
 			}
 		}
 		
-		Collections.shuffle(filesStr);
+		// Collections.shuffle(filesStr);
 		
 		List<String> training = filesStr.subList(0, (int)(filesStr.size() * 0.8));
 		List<String> prediction = filesStr.subList((int)(filesStr.size() - filesStr.size() * 0.2), filesStr.size());
@@ -112,8 +112,8 @@ public class Trainer {
 		int cnt = 0, correct = 0, incorrect = 0;
 		
 		for (Mat image : (List<Mat>)traDTralpreDpreL.get(2)) {
-			int[] pred = new int[3];
-			double[] conf = new double[3];
+			int[] pred = new int[1];
+			double[] conf = new double[1];
 			fishFace.predict(image, pred, conf);
 			
 			if (pred[0] == ((List<Integer>)traDTralpreDpreL.get(3)).get(cnt)) {

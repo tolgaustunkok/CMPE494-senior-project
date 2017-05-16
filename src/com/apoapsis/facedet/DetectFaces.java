@@ -18,7 +18,7 @@ import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
 public class DetectFaces {
-	private String[] emotions = { "happy", "surprise" };
+	private String[] emotions = { "happy", "surprise", "neutral" };
 	private Trainer trainer;
 	private CascadeClassifier faceDet, faceDet2, faceDet3, faceDet4;
 
@@ -78,22 +78,23 @@ public class DetectFaces {
 
 		if (faceFeatures != null) {
 			Rect[] facesArray = faceFeatures.toArray();
-			
+
 			for (Rect r : facesArray) {
 				gray = new Mat(gray, new Range(r.y, r.y + r.height), new Range(r.x, r.x + r.width));
 
 				Mat out = new Mat(350, 350, CvType.CV_8UC1);
 				Imgproc.resize(gray, out, new Size(350, 350));
 
-				int[] pred = new int[3];
-				double[] conf = new double[3];
+				int[] pred = new int[1];
+				double[] conf = new double[1];
 
 				BasicFaceRecognizer fishFace = trainer.getFisherFace();
 				fishFace.predict(out, pred, conf);
 				System.out.println("Confidence: " + conf[0]);
+				System.out.println("Prediction: " + emotions[pred[0]]);
 
-				if (conf[0] > 150) {
-					return "happy";
+				if (conf[0] > 200) {
+					return emotions[pred[0]];
 				} else {
 					return "nothing";
 				}
