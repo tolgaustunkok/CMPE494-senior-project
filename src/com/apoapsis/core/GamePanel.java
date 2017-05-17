@@ -14,6 +14,7 @@ public abstract class GamePanel extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	public static final int PWIDTH = 1280;
 	public static final int PHEIGHT = 720;
+	public static double DELTA;
 	private static final int FPS = 60;
 	private static int MAX_FRAME_SKIPS = 5;
 
@@ -72,7 +73,8 @@ public abstract class GamePanel extends JPanel implements Runnable {
 		running = true;
 
 		while (running) {
-			gameUpdate(timeDiff / 1000000.0);
+			DELTA = timeDiff / 1000000.0;
+			gameUpdate(DELTA);
 			gameRender();
 			paintScreen();
 
@@ -95,7 +97,7 @@ public abstract class GamePanel extends JPanel implements Runnable {
 			int skips = 0;
 			while (excess > period && skips < MAX_FRAME_SKIPS) {
 				excess -= period;
-				gameUpdate(timeDiff / 1000000.0);
+				gameUpdate(DELTA);
 				skips++;
 			}
 		}

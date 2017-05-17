@@ -1,13 +1,15 @@
 package com.apoapsis.gameelements;
 
+import com.apoapsis.core.Character;
+
 public class Mom extends Character {
 
-	public Mom(int x, int y) {
-		super("female", 5, x, y);
+	public Mom() {
+		super("female6.png", 280, 300, 34, 138);
 	}
 
 	@Override
-	public void animate(String animationType) {
+	public void update() {
+		
 	}
-
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.apoapsis.core.Character;
 import com.apoapsis.core.EnginePlayer;
 import com.apoapsis.core.GameObject;
 import com.apoapsis.facedet.DetectFaces;
@@ -14,20 +15,23 @@ import com.apoapsis.facedet.DetectFaces;
 public class Scene1 implements GameObject {
 	private BufferedImage background;
 	private DetectFaces detectFaces;
-	private Character child, mom;
-	private boolean getFace = false;
+	private Character mom;
+	private Child child;
+	private boolean getFace = true;
 	private int frameCounter = 0;
 	private boolean success = false;
 	private EnginePlayer enginePlayer;
-	private boolean voice1 = true, voice2 = true, voice3 = true, claps = true;
-	private boolean soundPlayable = true;
+	private boolean claps = true;
 	private GameObject emojiLaugh;
+	private boolean drawEmoji = false;
+	
+	public boolean canMoveToNextScene = false;
 
 	public Scene1(DetectFaces detectFaces) {
 		this.detectFaces = detectFaces;
 
 		child = new Child(450, 400);
-		mom = new Mom(280, 300);
+		mom = new Mom();
 		emojiLaugh = new Emoji("happy_im.png", 800, 50);
 		enginePlayer = EnginePlayer.getInstance();
 
@@ -36,30 +40,20 @@ public class Scene1 implements GameObject {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		enginePlayer.clearPlaylist();
+		enginePlayer.addToPlaylist("scene1-1");
+		enginePlayer.addToPlaylist("scene1-2");
+		enginePlayer.addToPlaylist("scene1-3");
 	}
 
 	@Override
 	public void update() {
 
-		if (soundPlayable) {
-			if (voice1) {
-				voice1 = !enginePlayer.playSound("school");
-			}
+		enginePlayer.playPlaylist();
 
-			if (voice2) {
-				voice2 = !enginePlayer.playSound("goodbye");
-			}
-
-			if (voice3) {
-				voice3 = !enginePlayer.playSound("smile");
-			}
-
-			if (!voice1 && !voice2 && !voice3) {
-				getFace = true;
-			}
-		}
-
-		if (getFace) {
+		if (enginePlayer.isPlaylistEmpty() && getFace) {
+			drawEmoji = true;
 			if (frameCounter > 90) {
 				String face = detectFaces.detectFaces();
 
@@ -68,7 +62,6 @@ public class Scene1 implements GameObject {
 				if (face != null && face.equalsIgnoreCase("happy")) {
 					success = true;
 					getFace = false;
-					soundPlayable = false;
 				}
 				frameCounter = 0;
 			}
@@ -76,9 +69,13 @@ public class Scene1 implements GameObject {
 		}
 
 		if (success) {
-			child.animate("walk_right");
+			child.update();
 			if (claps) {
 				claps = !enginePlayer.playSound("claps");
+			}
+			
+			if (child.collide()) {
+				canMoveToNextScene = true;
 			}
 			// TODO tasvip eden bi konusma
 			// TODO konfeti tarzi alkis falan
@@ -90,8 +87,12 @@ public class Scene1 implements GameObject {
 		g.drawImage(background, 0, 0, null);
 		mom.draw(g);
 		child.draw(g);
-		if (getFace) {
+		if (drawEmoji && !success) {
 			emojiLaugh.draw(g);
 		}
+	}
+	
+	public GameObject nextScene() {
+		return new Scene2();
 	}
 }

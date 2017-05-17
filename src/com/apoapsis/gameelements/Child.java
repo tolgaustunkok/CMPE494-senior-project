@@ -1,27 +1,21 @@
 package com.apoapsis.gameelements;
 
+import com.apoapsis.core.Character;
+import com.apoapsis.core.Game;
+
 public class Child extends Character {
-	
-	private int frameCounter = 0;
 
 	public Child(int x, int y) {
-		super("male", 0, x, y);
+		super("child.png", x, y, 165, 270);
 	}
-
+	
 	@Override
-	public void animate(String animationType) {
-		if (animationType.equalsIgnoreCase("walk_right")) {
-			x += 1;
-			
-			if (frameCounter == 5) {
-				currentSpriteIndex++;
-				frameCounter = 0;
-				if (currentSpriteIndex == 20) {
-					currentSpriteIndex = 0;
-				}
-			}
-			
-			frameCounter++;
-		}
+	public void update() {
+		spriteAnimator.animate(0, 3);
+		setX(getX() + 2);
+	}
+	
+	public boolean collide() {
+		return getX() + (165 / 2) > Game.PWIDTH;
 	}
 }

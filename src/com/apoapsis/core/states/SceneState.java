@@ -17,6 +17,11 @@ public class SceneState implements State {
 	@Override
 	public boolean execute() {
 		scene.update();
+		
+		if (scene instanceof Scene1 && ((Scene1)scene).canMoveToNextScene) {
+			scene = ((Scene1)scene).nextScene();
+		}
+		
 		return false;
 	}
 

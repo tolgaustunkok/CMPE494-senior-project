@@ -20,7 +20,7 @@ public class StartScreen {
 	private BufferedImage face;
 	private BufferedImage rainbow;
 	private int countFPS = 0;
-	private boolean voice1 = true, voice2 = true, voice3 = true, bg = true;
+	private boolean bg = true;
 	private EnginePlayer enginePlayer;
 
 	public StartScreen() {
@@ -39,13 +39,17 @@ public class StartScreen {
 		enginePlayer.loadSound("welcome", "hosgeldin2.wav");
 		enginePlayer.loadSound("lights", "isik.wav");
 		enginePlayer.loadSound("camera", "kamera.wav");
-		enginePlayer.loadSound("school", "scene1-1.wav");
-		enginePlayer.loadSound("goodbye", "scene1-2.wav");
-		enginePlayer.loadSound("smile", "scene1-3.wav");
+		enginePlayer.loadSound("scene1-1", "scene1-1.wav");
+		enginePlayer.loadSound("scene1-2", "scene1-2.wav");
+		enginePlayer.loadSound("scene1-3", "scene1-3.wav");
 		enginePlayer.loadSound("claps", "claps.wav");
 		enginePlayer.loadSound("bg", "background.wav");
 		
 		enginePlayer.changeVolume(-10.0f, "bg");
+		
+		enginePlayer.addToPlaylist("welcome");
+		enginePlayer.addToPlaylist("lights");
+		enginePlayer.addToPlaylist("camera");
 	}
 
 	private void loadImages() throws IOException {
@@ -80,18 +84,8 @@ public class StartScreen {
 		if (bg) {
 			bg = !enginePlayer.playConcurrently("bg");
 		}
-
-		if (voice1) {
-			voice1 = !enginePlayer.playSound("welcome");
-		}
 		
-		if (voice2) {
-			voice2 = !enginePlayer.playSound("lights");
-		}
-		
-		if (voice3) {
-			voice3 = !enginePlayer.playSound("camera");
-		}
+		enginePlayer.playPlaylist();
 
 		if (countFPS > 300) {
 			if (detectFaces.detectFaces() != null) {
@@ -99,8 +93,8 @@ public class StartScreen {
 			}
 			countFPS = 0;
 		}
-
-		if (!voice1 && !voice2 && !voice3) {
+		
+		if (enginePlayer.isPlaylistEmpty()) {
 			countFPS++;
 		}
 

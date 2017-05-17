@@ -1,9 +1,7 @@
 package com.apoapsis.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 public class EnginePlayer {
 	private final String SOUND_DIR = "resources/sounds/";
@@ -28,22 +26,27 @@ public class EnginePlayer {
 		PlayClip playClip = new PlayClip(SOUND_DIR + fileName);
 		sounds.put(name, playClip);
 	}
-	
+
 	public void addToPlaylist(String clipName) {
 		playlist.add(sounds.get(clipName));
 		playableClips.add(true);
 	}
-	
+
 	public void playPlaylist() {
-		int i = 0;
-		
-		playlist.forEach(sound -> {
-			if (playableClips.getFirst()) {
-				playableClips.set(i++, !playSound(sound));
+
+		if (!playlist.isEmpty()) {
+			PlayClip p = playlist.getFirst();
+
+			if (playSound(p)) {
+				playlist.removeFirst();
 			}
-		});
+		}
 	}
 	
+	public boolean isPlaylistEmpty() {
+		return playlist.isEmpty();
+	}
+
 	public void clearPlaylist() {
 		playlist.clear();
 	}
@@ -60,7 +63,7 @@ public class EnginePlayer {
 			return false;
 		}
 	}
-	
+
 	public boolean playSound(PlayClip name) {
 		if (currentlyPlaying == null) {
 			currentlyPlaying = name;
@@ -73,7 +76,7 @@ public class EnginePlayer {
 			return false;
 		}
 	}
-	
+
 	public void changeVolume(float change, String sound) {
 		PlayClip pc = sounds.get(sound);
 		pc.changeVolume(change);

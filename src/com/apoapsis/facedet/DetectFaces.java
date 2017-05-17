@@ -18,7 +18,7 @@ import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
 public class DetectFaces {
-	private String[] emotions = { "happy", "surprise"};
+	private String[] emotions = { "happy", "surprise" };
 	private Trainer trainer;
 	private CascadeClassifier faceDet, faceDet2, faceDet3, faceDet4;
 
