@@ -40,6 +40,8 @@ public class EnginePlayer {
 			if (playSound(p)) {
 				playlist.removeFirst();
 			}
+		} else {
+			currentlyPlaying = null;
 		}
 	}
 	

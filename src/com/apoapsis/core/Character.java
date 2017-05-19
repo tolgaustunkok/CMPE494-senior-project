@@ -17,6 +17,14 @@ public abstract class Character implements GameObject {
 	public void draw(Graphics g) {
 		spriteAnimator.draw(g);
 	}
+	
+	public int getWidth() {
+		return spriteAnimator.getFrame().getWidth();
+	}
+	
+	public int getHeight() {
+		return spriteAnimator.getFrame().getHeight();
+	}
 
 	public int getX() {
 		return spriteAnimator.x;

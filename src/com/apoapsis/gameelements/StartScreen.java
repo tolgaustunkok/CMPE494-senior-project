@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import com.apoapsis.core.EnginePlayer;
 import com.apoapsis.core.Game;
+import com.apoapsis.core.Utilities;
 import com.apoapsis.facedet.DetectFaces;
 
 public class StartScreen {
@@ -54,26 +55,9 @@ public class StartScreen {
 
 	private void loadImages() throws IOException {
 		background = ImageIO.read(new File("resources/images/background.png"));
-		face = toBufferedImage(
+		face = Utilities.toBufferedImage(
 				ImageIO.read(new File("resources/images/face.png")).getScaledInstance(294, 299, Image.SCALE_SMOOTH));
 		rainbow = ImageIO.read(new File("resources/images/rainbow.png"));
-	}
-
-	private BufferedImage toBufferedImage(Image img) {
-		if (img instanceof BufferedImage) {
-			return (BufferedImage) img;
-		}
-
-		// Create a buffered image with transparency
-		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-		// Draw the image on to the buffered image
-		Graphics bGr = bimage.createGraphics();
-		bGr.drawImage(img, 0, 0, null);
-		bGr.dispose();
-
-		// Return the buffered image
-		return bimage;
 	}
 
 	public boolean update(DetectFaces detectFaces) {

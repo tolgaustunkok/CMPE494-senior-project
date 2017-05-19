@@ -10,7 +10,6 @@ import org.opencv.core.Range;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.face.BasicFaceRecognizer;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
@@ -18,22 +17,31 @@ import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
 public class DetectFaces {
-	private String[] emotions = { "happy", "surprise" };
+	private String[] emotions = { "happy", "contempt", "neutral", "surprise" };
 	private Trainer trainer;
 	private CascadeClassifier faceDet, faceDet2, faceDet3, faceDet4;
+	private static DetectFaces uniqueInstance = null;
 
-	public DetectFaces() {
+	private DetectFaces() {
 		faceDet = new CascadeClassifier("resources/haarcascade/haarcascade_frontalface_default.xml");
 		faceDet2 = new CascadeClassifier("resources/haarcascade/haarcascade_frontalface_alt2.xml");
 		faceDet3 = new CascadeClassifier("resources/haarcascade/haarcascade_frontalface_alt.xml");
 		faceDet4 = new CascadeClassifier("resources/haarcascade/haarcascade_frontalface_alt_tree.xml");
 		trainer = new Trainer();
 	}
+	
+	public static DetectFaces getInstance() {
+		if (uniqueInstance == null) {
+			uniqueInstance = new DetectFaces();
+		}
+		
+		return uniqueInstance;
+	}
 
 	public void train() {
 		List<Double> metaScore = new ArrayList<>();
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 3; i++) {
 			double correct = trainer.runRecognizer();
 			System.out.println("got " + correct + " percent correct!");
 			metaScore.add(correct);

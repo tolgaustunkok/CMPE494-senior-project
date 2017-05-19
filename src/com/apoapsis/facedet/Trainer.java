@@ -14,11 +14,15 @@ import org.opencv.core.Mat;
 import org.opencv.face.BasicFaceRecognizer;
 import org.opencv.face.Face;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
 
 public class Trainer {
 	
-	private String[] emotions = { "happy", "surprise" };
+	private final static int TRAINING_DATA = 0;
+	private final static int TRAINING_LABEL = 1;
+	private final static int PREDICTION_DATA = 2;
+	private final static int PREDICTION_LABEL = 3;
+	
+	private String[] emotions = { "happy", "contempt", "neutral", "surprise" };
 	private BasicFaceRecognizer fishFace;
 	
 	public Trainer() {
@@ -39,7 +43,7 @@ public class Trainer {
 			}
 		}
 		
-		// Collections.shuffle(filesStr);
+		Collections.shuffle(filesStr);
 		
 		List<String> training = filesStr.subList(0, (int)(filesStr.size() * 0.8));
 		List<String> prediction = filesStr.subList((int)(filesStr.size() - filesStr.size() * 0.2), filesStr.size());
@@ -58,23 +62,25 @@ public class Trainer {
 		List<Mat> predictionData = new ArrayList<>();
 		List<Integer> predictionLabels = new ArrayList<>();
 		
-		for (String emotion : emotions) {
-			List<List<String>> traPre = getFiles(emotion);
+		for (int i = 0; i < emotions.length; i++) {
+			List<List<String>> traPre = getFiles(emotions[i]);
 			
 			for (String item : traPre.get(0)) {
-				Mat image = Imgcodecs.imread(item);
-				Mat gray = new Mat(image.rows(), image.cols(), CvType.CV_8UC1);
-				Imgproc.cvtColor(image, gray, Imgproc.COLOR_BGR2GRAY);
-				trainingData.add(gray);
-				trainingLabels.add(search(emotion, emotions));
+				Mat image = Imgcodecs.imread(item, Imgcodecs.IMREAD_GRAYSCALE);
+				//Mat gray = new Mat(image.rows(), image.cols(), CvType.CV_8UC1);
+				//Imgproc.cvtColor(image, gray, Imgproc.COLOR_BGR2GRAY);
+				//trainingData.add(gray);
+				trainingData.add(image);
+				trainingLabels.add(i);
 			}
 			
 			for (String item : traPre.get(1)) {
-				Mat image = Imgcodecs.imread(item);
-				Mat gray = new Mat(image.rows(), image.cols(), CvType.CV_8UC1);
-				Imgproc.cvtColor(image, gray, Imgproc.COLOR_BGR2GRAY);
-				predictionData.add(gray);
-				predictionLabels.add(search(emotion, emotions));
+				Mat image = Imgcodecs.imread(item, Imgcodecs.IMREAD_GRAYSCALE);
+				//Mat gray = new Mat(image.rows(), image.cols(), CvType.CV_8UC1);
+				//Imgproc.cvtColor(image, gray, Imgproc.COLOR_BGR2GRAY);
+				//predictionData.add(gray);
+				predictionData.add(image);
+				predictionLabels.add(i);
 			}
 		}
 		
@@ -86,7 +92,7 @@ public class Trainer {
 		return result;
 	}
 	
-	private int[] changeIntArray(List<Integer> arr) {
+	private int[] convert2IntArray(List<Integer> arr) {
 		int[] result = new int[arr.size()];
 		
 		for (int i = 0; i < arr.size(); i++) {
@@ -97,46 +103,44 @@ public class Trainer {
 	}
 	
 	public double runRecognizer() {
-		List<Object> traDTralpreDpreL = makeSets();
+		List<Object> traDTraLpreDpreL = makeSets();
 		
 		System.out.println("training fisher face classifier");
-		System.out.println("size of training set is: " + ((List<Integer>)traDTralpreDpreL.get(1)).size() + " images");
+		System.out.println("size of training set is: " + ((List<Integer>)traDTraLpreDpreL.get(TRAINING_LABEL)).size() + " images");
 		
-		Mat trainingLables = new Mat(1, ((List<Integer>) traDTralpreDpreL.get(1)).size(), CvType.CV_32SC1);
-		int[] traL = changeIntArray(((List<Integer>) traDTralpreDpreL.get(1)));
+		Mat trainingLables = new Mat(1, ((List<Integer>) traDTraLpreDpreL.get(TRAINING_LABEL)).size(), CvType.CV_32SC1);
+		int[] traL = convert2IntArray(((List<Integer>) traDTraLpreDpreL.get(TRAINING_LABEL)));
 		trainingLables.put(0, 0, traL);
-		fishFace.train((List<Mat>) traDTralpreDpreL.get(0), trainingLables);
+		fishFace.train((List<Mat>) traDTraLpreDpreL.get(TRAINING_DATA), trainingLables);
 		
 		System.out.println("predicting classification set");
 		
-		int cnt = 0, correct = 0, incorrect = 0;
+		int correct = 0, incorrect = 0;
 		
-		for (Mat image : (List<Mat>)traDTralpreDpreL.get(2)) {
+		for (int i= 0; i < ((List<Mat>)traDTraLpreDpreL.get(PREDICTION_DATA)).size(); i++) {
 			int[] pred = new int[1];
 			double[] conf = new double[1];
-			fishFace.predict(image, pred, conf);
+			fishFace.predict(((List<Mat>)traDTraLpreDpreL.get(PREDICTION_DATA)).get(i), pred, conf);
 			
-			if (pred[0] == ((List<Integer>)traDTralpreDpreL.get(3)).get(cnt)) {
+			if (pred[0] == ((List<Integer>)traDTraLpreDpreL.get(PREDICTION_LABEL)).get(i)) {
 				correct++;
-				cnt++;
 			} else {
 				incorrect++;
-				cnt++;
 			}
 		}
 		
 		return ((100 * correct) / (correct + incorrect));
 	}
 	
-	private int search(String s, String[] arr) {
-		for (int i = 0; i < arr.length; i++) {
-			if (s.equalsIgnoreCase(arr[i])) {
-				return i;
-			}
-		}
-		
-		return -1;
-	}
+//	private int search(String s, String[] arr) {
+//		for (int i = 0; i < arr.length; i++) {
+//			if (s.equalsIgnoreCase(arr[i])) {
+//				return i;
+//			}
+//		}
+//		
+//		return -1;
+//	}
 	
 	public BasicFaceRecognizer getFisherFace() {
 		return fishFace;

@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPanel;
 
@@ -29,10 +31,10 @@ public abstract class GamePanel extends JPanel implements Runnable {
 		setPreferredSize(new Dimension(PWIDTH, PHEIGHT));
 		setFocusable(true);
 		requestFocus();
-		readyForTermination();
+		addEvents();
 	}
 
-	private void readyForTermination() {
+	private void addEvents() {
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -40,6 +42,13 @@ public abstract class GamePanel extends JPanel implements Runnable {
 				if (keyCode == KeyEvent.VK_ESCAPE) {
 					running = false;
 				}
+			}
+		});
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				System.out.println("X: " + e.getX() + " - Y: " + e.getY());
 			}
 		});
 	}

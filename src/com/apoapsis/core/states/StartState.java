@@ -12,7 +12,7 @@ public class StartState implements State {
 	private StartScreen startScreen;
 
 	public StartState() {
-		detectFaces = new DetectFaces();
+		detectFaces = DetectFaces.getInstance();
 		startScreen = new StartScreen();
 		
 		detectFaces.train();

@@ -2,12 +2,9 @@ package com.apoapsis.gameelements;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import com.apoapsis.core.Character;
+import com.apoapsis.core.EngineFileHandler;
 import com.apoapsis.core.EnginePlayer;
 import com.apoapsis.core.GameObject;
 import com.apoapsis.facedet.DetectFaces;
@@ -30,16 +27,11 @@ public class Scene1 implements GameObject {
 	public Scene1(DetectFaces detectFaces) {
 		this.detectFaces = detectFaces;
 
-		child = new Child(450, 400);
+		child = new Child(450, 400, 2);
 		mom = new Mom();
 		emojiLaugh = new Emoji("happy_im.png", 800, 50);
 		enginePlayer = EnginePlayer.getInstance();
-
-		try {
-			background = ImageIO.read(new File("resources/images/scene1.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		background = EngineFileHandler.loadImage("scene1.png");
 		
 		enginePlayer.clearPlaylist();
 		enginePlayer.addToPlaylist("scene1-1");

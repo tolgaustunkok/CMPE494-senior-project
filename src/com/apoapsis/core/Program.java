@@ -9,6 +9,7 @@ public class Program {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
 		JFrame gameFrame = new JFrame("Team Apoapsis Simple Game Engine");
+		gameFrame.setResizable(false);
 		gameFrame.add(new Game());
 		gameFrame.setVisible(true);;
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

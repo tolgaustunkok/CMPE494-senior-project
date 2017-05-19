@@ -70,8 +70,17 @@ public class PlayClip implements LineListener {
 
 	public void play() {
 		if (clip != null) {
+			if (!clip.isOpen()) {
+				try {
+					clip.open();
+				} catch (LineUnavailableException e) {
+					e.printStackTrace();
+				}
+			}
 			clip.start();
 			playing = true;
+		} else {
+			System.err.println("Clip is null.");
 		}
 	}
 	
