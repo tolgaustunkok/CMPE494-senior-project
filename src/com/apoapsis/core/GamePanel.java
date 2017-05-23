@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
@@ -17,6 +18,9 @@ public abstract class GamePanel extends JPanel implements Runnable {
 	public static final int PWIDTH = 1280;
 	public static final int PHEIGHT = 720;
 	public static double DELTA;
+	public static int MOUSE_X;
+	public static int MOUSE_Y;
+	public static boolean LEFT_CLICK = false;
 	private static final int FPS = 60;
 	private static int MAX_FRAME_SKIPS = 5;
 
@@ -48,7 +52,21 @@ public abstract class GamePanel extends JPanel implements Runnable {
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
+				MOUSE_X = e.getX();
+				MOUSE_Y = e.getY();
 				System.out.println("X: " + e.getX() + " - Y: " + e.getY());
+			}
+		});
+		
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				LEFT_CLICK = true;
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LEFT_CLICK = false;
 			}
 		});
 	}

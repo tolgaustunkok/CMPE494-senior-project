@@ -45,6 +45,9 @@ public class StartScreen {
 		enginePlayer.loadSound("scene1-3", "scene1-3.wav");
 		enginePlayer.loadSound("claps", "claps.wav");
 		enginePlayer.loadSound("bg", "background.wav");
+		enginePlayer.loadSound("scene2-1", "scene2-1.wav");
+		enginePlayer.loadSound("scene2-2", "scene2-2.wav");
+		enginePlayer.loadSound("scene2-3", "scene2-3.wav");
 		
 		enginePlayer.changeVolume(-10.0f, "bg");
 		

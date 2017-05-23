@@ -21,6 +21,8 @@ public class Scene1 implements GameObject {
 	private boolean claps = true;
 	private GameObject emojiLaugh;
 	private boolean drawEmoji = false;
+	private ContinueButton contButton;
+	private boolean collide = false;;
 	
 	public boolean canMoveToNextScene = false;
 
@@ -32,8 +34,11 @@ public class Scene1 implements GameObject {
 		emojiLaugh = new Emoji("happy_im.png", 800, 50);
 		enginePlayer = EnginePlayer.getInstance();
 		background = EngineFileHandler.loadImage("scene1.png");
+		contButton = new ContinueButton(640, 360, () -> {
+			canMoveToNextScene = true;
+		});
 		
-		enginePlayer.clearPlaylist();
+		// enginePlayer.clearPlaylist();
 		enginePlayer.addToPlaylist("scene1-1");
 		enginePlayer.addToPlaylist("scene1-2");
 		enginePlayer.addToPlaylist("scene1-3");
@@ -67,10 +72,12 @@ public class Scene1 implements GameObject {
 			}
 			
 			if (child.collide()) {
-				canMoveToNextScene = true;
+				collide = true;
 			}
-			// TODO tasvip eden bi konusma
-			// TODO konfeti tarzi alkis falan
+			
+			if (collide) {
+				contButton.update();
+			}
 		}
 	}
 
@@ -81,6 +88,10 @@ public class Scene1 implements GameObject {
 		child.draw(g);
 		if (drawEmoji && !success) {
 			emojiLaugh.draw(g);
+		}
+		
+		if (collide) {
+			contButton.draw(g);
 		}
 	}
 	

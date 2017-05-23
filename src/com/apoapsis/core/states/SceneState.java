@@ -6,12 +6,14 @@ import com.apoapsis.core.GameObject;
 import com.apoapsis.core.State;
 import com.apoapsis.facedet.DetectFaces;
 import com.apoapsis.gameelements.Scene1;
+import com.apoapsis.gameelements.Scene2;
 
 public class SceneState implements State {
 	private GameObject scene;
 	
 	public SceneState(DetectFaces detectFaces) {
 		scene = new Scene1(detectFaces);
+		//scene = new Scene2();
 	}
 
 	@Override

@@ -17,13 +17,23 @@ public class Scene2 implements GameObject {
 	private Child child;
 	private SchoolGirl schoolGirl;
 	private boolean childStopped = false, girlStopped = false, claps = false, canMove = true;
+	private boolean canDraw = false;
+	private BufferedImage surprise;
 
 	public Scene2() {
-		// gameObjects.add(new Bag(700, 440));
 		gameObjects.add(schoolGirl = new SchoolGirl(1280, 300, -2));
 		gameObjects.add(child = new Child(0, 300, 2));
+//		gameObjects.add(new ContinueButton(640, 360, () -> {
+//			System.out.println("Clicked");
+//		}));
 
 		background = EngineFileHandler.loadImage("school.png");
+		surprise = EngineFileHandler.loadImage("surprise.png");
+		EnginePlayer.getInstance().loadSound("claps", "claps.wav");
+		
+		EnginePlayer.getInstance().addToPlaylist("scene2-1");
+		EnginePlayer.getInstance().addToPlaylist("scene2-2");
+		EnginePlayer.getInstance().addToPlaylist("scene2-3");
 	}
 
 	public void addGameObject(GameObject gameObject) {
@@ -49,25 +59,28 @@ public class Scene2 implements GameObject {
 		}
 
 		if (girlStopped && childStopped) {
-			// TODO Meltemin konusmasi
-			// If meltemin konusmasi bittiyse
-			if (frameCounter > 90) {
-				String face = DetectFaces.getInstance().detectFaces();
+			
+			EnginePlayer.getInstance().playPlaylist();
 
-				if (face.equalsIgnoreCase("surprise")) {
-					claps = true;
-					canMove = false;
-					child.speed = 2;
-					schoolGirl.speed = -2;
-					girlStopped = false;
-					childStopped = false;
+			if (EnginePlayer.getInstance().isPlaylistEmpty()) {
+				canDraw = true;
+				if (frameCounter > 90) {
+					String face = DetectFaces.getInstance().detectFaces();
+
+					if (face.equalsIgnoreCase("surprise")) {
+						claps = true;
+						canDraw = false;
+						canMove = false;
+						child.speed = 2;
+						schoolGirl.speed = -2;
+						girlStopped = false;
+						childStopped = false;
+					}
+					frameCounter = 0;
 				}
-				frameCounter = 0;
-			}
-			// TODO Konusmadan sonra bir yuz ifadesi al ve degerlendir
-			// TODO Basarili olunduysa alkis ve devam
 
-			frameCounter++;
+				frameCounter++;
+			}
 		}
 
 		if (claps) {
@@ -82,6 +95,10 @@ public class Scene2 implements GameObject {
 
 		for (GameObject go : gameObjects) {
 			go.draw(g);
+		}
+
+		if (canDraw) {
+			g.drawImage(surprise, 800, 50, null);
 		}
 	}
 

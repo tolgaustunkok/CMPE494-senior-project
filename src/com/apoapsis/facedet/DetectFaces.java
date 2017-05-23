@@ -21,6 +21,7 @@ public class DetectFaces {
 	private Trainer trainer;
 	private CascadeClassifier faceDet, faceDet2, faceDet3, faceDet4;
 	private static DetectFaces uniqueInstance = null;
+	private static final int TRAINING_COUNT = 5;
 
 	private DetectFaces() {
 		faceDet = new CascadeClassifier("resources/haarcascade/haarcascade_frontalface_default.xml");
@@ -41,7 +42,7 @@ public class DetectFaces {
 	public void train() {
 		List<Double> metaScore = new ArrayList<>();
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < TRAINING_COUNT; i++) {
 			double correct = trainer.runRecognizer();
 			System.out.println("got " + correct + " percent correct!");
 			metaScore.add(correct);

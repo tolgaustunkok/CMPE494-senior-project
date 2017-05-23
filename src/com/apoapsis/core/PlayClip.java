@@ -17,6 +17,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class PlayClip implements LineListener {
 	private Clip clip;
 	private boolean playing = false;
+	private AudioInputStream stream;
 
 	public PlayClip(String clip) {
 		loadClip(clip);
@@ -33,7 +34,7 @@ public class PlayClip implements LineListener {
 
 	private void loadClip(String clipDir) {
 		try {
-			AudioInputStream stream = AudioSystem.getAudioInputStream(new File(clipDir));
+			stream = AudioSystem.getAudioInputStream(new File(clipDir));
 			AudioFormat format = stream.getFormat();
 			
 			if (format.getEncoding() == AudioFormat.Encoding.ULAW || format.getEncoding() == AudioFormat.Encoding.ALAW) {
