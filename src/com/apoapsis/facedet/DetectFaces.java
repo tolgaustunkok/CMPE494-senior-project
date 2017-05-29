@@ -21,7 +21,7 @@ public class DetectFaces {
 	private Trainer trainer;
 	private CascadeClassifier faceDet, faceDet2, faceDet3, faceDet4;
 	private static DetectFaces uniqueInstance = null;
-	private static final int TRAINING_COUNT = 5;
+	private static final int TRAINING_COUNT = 10;
 
 	private DetectFaces() {
 		faceDet = new CascadeClassifier("resources/haarcascade/haarcascade_frontalface_default.xml");

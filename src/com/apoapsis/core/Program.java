@@ -8,7 +8,7 @@ public class Program {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		JFrame gameFrame = new JFrame("Team Apoapsis Simple Game Engine");
+		JFrame gameFrame = new JFrame("Team Apoapsis Simple 2D Game Engine");
 		gameFrame.setResizable(false);
 		gameFrame.add(new Game());
 		gameFrame.setVisible(true);;
